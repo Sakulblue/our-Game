@@ -45,8 +45,8 @@ public class Wizzard: Player
 
 
     //Konstruktor for Wizzard
-    public Wizzard(GraphicsDevice graphicsDevice, Vector2 position1, Texture2D texture1, Texture2D special_move_texture, int player, PlayerControls controls)
-              : base(graphicsDevice, position1, texture1, special_move_texture, player, controls)
+    public Wizzard(GraphicsDevice graphicsDevice, Vector2 position1, Texture2D texture1, Texture2D shoot_texture, Texture2D special_move_texture, int player, PlayerControls controls)
+              : base(graphicsDevice, position1, texture1, shoot_texture, special_move_texture, player, controls)
     {}
 
 
@@ -143,22 +143,27 @@ public class Wizzard: Player
     {
         if (is_teleporting) { return; }
 
+        Texture2D tex = get_current_texture();
 
-        if (moving_direction == -1)
-        {
-            spriteBatch.Draw(texture,
-                             currentRect, null, Color.White, 0f, Vector2.Zero,
-                             SpriteEffects.FlipHorizontally, 0f
-                             );
-        }
-        else
-        {
-            spriteBatch.Draw(texture,
-                            currentRect, null, Color.White, 0f, Vector2.Zero,
-                            SpriteEffects.None, 0f
-                            );
+        Vector2 drawPos = new Vector2(currentRect.X + currentRect.Width / 2f,
+                                      currentRect.Y + currentRect.Height / 2f);
+        Vector2 origin = new Vector2(tex.Width / 2f, tex.Height / 2f);
+        Vector2 scale = new Vector2((float)currentRect.Width / tex.Width,
+                                    (float)currentRect.Height / tex.Height);
 
-        }
+        SpriteEffects effect = moving_direction == -1
+            ? SpriteEffects.FlipHorizontally
+            : SpriteEffects.None;
+
+        spriteBatch.Draw(tex,
+                         drawPos,
+                         null,
+                         Color.White,
+                         0f,
+                         origin,
+                         scale,
+                         effect,
+                         0f);
 
         if (can_move == false)
         {
